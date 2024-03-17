@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Real-time Temperature Monitoring</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Establish WebSocket connection with the server
+        const socket = io.connect();
+
+        // Event handler for receiving temperature data
+        socket.on("temperature_data", function (data) {
+          // Update the UI with the received temperature data
+          const temperatureElement =
+            document.getElementById("temperature-data");
+          const timestamp = new Date(data.timestamp).toLocaleString();
+          const temperature = data.temperature;
+          const location = data.location;
+          temperatureElement.innerHTML = `Timestamp: ${timestamp}<br>Temperature: ${temperature}°C<br>Location: ${location}`;
+        });
+
+        // Event handler for button click to fetch temperature data
+        const fetchButton = document.getElementById("fetch-button");
+        fetchButton.addEventListener("click", function () {
+          const selectedCity = document.getElementById("city-select").value;
+          socket.emit("get_temperature", { city: selectedCity });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Real-time Temperature Monitoring</h1>
+    <div>
+      <label for="city-select">Select City:</label>
+      <select id="city-select">
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Pune">Pune</option>
+        <option value="Ahmedabad">Ahmedabad</option>
+        <option value="Jaipur">Jaipur</option>
+        <option value="Lucknow">Lucknow</option>
+
+        <option value="New York">New York</option>
+        <option value="Tokyo">Tokyo</option>
+        <option value="London">London</option>
+        <option value="Paris">Paris</option>
+        <option value="Dubai">Dubai</option>
+        <option value="Moscow">Moscow</option>
+        <option value="Sydney">Sydney</option>
+        <option value="Rio de Janeiro">Rio de Janeiro</option>
+        <option value="Singapore">Singapore</option>
+        <option value="New Delhi">New Delhi</option>
+        <option value="Los Angeles">Los Angeles</option>
+        <option value="Rome">Rome</option>
+        <option value="Berlin">Berlin</option>
+        <option value="Beijing">Beijing</option>
+        <option value="Cairo">Cairo</option>
+        <option value="Toronto">Toronto</option>
+        <option value="Istanbul">Istanbul</option>
+        <option value="Bangkok">Bangkok</option>
+        <option value="Mexico City">Mexico City</option>
+        <option value="Nairobi">Nairobi</option>
+        <option value="Buenos Aires">Buenos Aires</option>
+        <option value="Oymyakon">Oymyakon</option>
+      </select>
+      <button id="fetch-button">Fetch Temperature</button>
+    </div>
+    <div id="temperature-data"></div>
+  </body>
+</html>
