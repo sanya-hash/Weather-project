@@ -1,25 +1,95 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <title>Real-time Temperature Monitoring</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
-    <script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin:20px 0px 0px 200px
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#temperature-data {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+    </style>
+   <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Establish WebSocket connection with the server
         const socket = io.connect();
 
-        // Event handler for receiving temperature data
         socket.on("temperature_data", function (data) {
-          // Update the UI with the received temperature data
-          const temperatureElement =
-            document.getElementById("temperature-data");
+          const temperatureElement = document.getElementById("temperature-data");
           const timestamp = new Date(data.timestamp).toLocaleString();
           const temperature = data.temperature;
           const location = data.location;
-          temperatureElement.innerHTML = `Timestamp: ${timestamp}<br>Temperature: ${temperature}°C<br>Location: ${location}`;
+          const humidity= data.humidity;
+          const pressure=data.pressure;
+          temperatureElement.innerHTML = `
+            <strong>Timestamp:</strong> ${timestamp}<br>
+            <strong>Temperature:</strong> ${temperature}°C<br>
+            <strong>Location:</strong> ${location}<br>
+            <strong>Humidity:</strong> ${humidity}<br>
+            <strong>Pressue:</strong> ${pressure}<br>
+   
+
+
+          `;
         });
 
-        // Event handler for button click to fetch temperature data
         const fetchButton = document.getElementById("fetch-button");
         fetchButton.addEventListener("click", function () {
           const selectedCity = document.getElementById("city-select").value;
@@ -29,10 +99,12 @@
     </script>
   </head>
   <body>
-    <h1>Real-time Temperature Monitoring</h1>
-    <div>
-      <label for="city-select">Select City:</label>
-      <select id="city-select">
+    <div class="container">
+      <h1>Real-time Temperature Monitoring</h1>
+      <div class="form-group">
+        <label for="city-select">Select City:</label>
+        <select id="city-select">
+          <option value="">Select City</option>
         <option value="Hyderabad">Hyderabad</option>
         <option value="Mumbai">Mumbai</option>
         <option value="Delhi">Delhi</option>
